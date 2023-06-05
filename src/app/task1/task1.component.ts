@@ -28,12 +28,14 @@ export class Task1Component {
     });
 
 
-    // Create autocomplete search box
+    // Create autocomplete search box.....................
     const input = document.getElementById('search-box') as HTMLInputElement;
     this.autocomplete = new (google as any).maps.places.Autocomplete(input);
     this.autocomplete.setFields(['geometry']);
 
-    // Show current location on page load
+
+
+    // Show current location on page load......................
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const currentLocation = new google.maps.LatLng(
@@ -46,7 +48,7 @@ export class Task1Component {
       });
     }
 
-
+    // Add Location Marker or Pin.........................
     this.marker = new google.maps.Marker({
       map: this.map,
       draggable: true,

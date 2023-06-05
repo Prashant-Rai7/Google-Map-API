@@ -1,1 +1,29 @@
-<p>task2 works!</p>
+<!--
+<div class="search-container">
+  <form (ngSubmit)="showRoute()">
+  <input id="fromSearchBox"  [(ngModel)]="fromLocation"  #fromSearchBox  name="fromLocation" (input)="onFromLocationInput()" type="text"  placeholder="From Location" autocomplete="on" >
+  <input id="toSearchBox" [(ngModel)]="toLocation" name="toLocation" (input)="onToLocationInput()" autocomplete="on" #toSearchBox type="text" placeholder="To Location">
+  <button type="submit" [disabled]="!fromLocation || !toLocation" (click)="showRoute()">Get Route</button>
+
+</form>
+</div>
+
+<div class="route-info" *ngIf="distance && duration">
+  <p>Distance: {{ distance }}</p>
+  <p>Duration: {{ duration }}</p>
+</div>
+
+  <div id="map"></div> -->
+
+
+  <div>
+    <h2>Map Routing App</h2>
+    <form (ngSubmit)="onSubmit()">
+      <label>From:</label>
+      <input type="text" [(ngModel)]="fromLocation" name="fromLocation" (input)="onFromLocationInput()" autocomplete="on" />
+      <label>To:</label>
+      <input type="text" [(ngModel)]="toLocation" name="toLocation" (input)="onToLocationInput()" autocomplete="on" />
+      <button type="submit" [disabled]="!fromLocation || !toLocation">Get Route</button>
+    </form>
+    <div #mapContainer id="map-container"></div>
+  </div>
