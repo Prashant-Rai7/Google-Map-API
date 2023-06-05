@@ -173,7 +173,9 @@ export class Task2Component {
   directionsService: any;
   directionsRenderer: any;
   fromAutocomplete: any;
-toAutocomplete: any;
+  toAutocomplete: any;
+  distance: string = '';
+  duration: string = '';
 
   constructor() {
     this.directionsService = new google.maps.DirectionsService();
@@ -191,6 +193,17 @@ toAutocomplete: any;
     this.fromAutocomplete = new google.maps.places.Autocomplete(this.fromInput.nativeElement);
     this.toAutocomplete = new google.maps.places.Autocomplete(this.toInput.nativeElement);
   }
+
+
+    // // Create autocomplete search box................
+    // const fromInput = this.fromSearchBox.nativeElement;
+    // const toInput = this.toSearchBox.nativeElement;
+    // this.fromAutocomplete = new google.maps.places.Autocomplete(fromInput);
+    // this.toAutocomplete = new google.maps.places.Autocomplete(toInput);
+    // this.fromAutocomplete.setFields(['geometry']);
+    // this.toAutocomplete.setFields(['geometry']);
+
+
 
   onSubmit() {
     if (this.fromLocation && this.toLocation) {
@@ -238,5 +251,19 @@ toAutocomplete: any;
         }
       });
     }
+  }
+
+    calculateDistanceAndDuration(response: any) {
+    const route = response.routes[0];
+    let totalDistance = 0;
+    let totalDuration = 0;
+
+    for (let i = 0; i < route.legs.length; i++) {
+      totalDistance += route.legs[i].distance.value;
+      totalDuration += route.legs[i].duration.value;
+    }
+
+    this.distance = (totalDistance / 1000).toFixed(2) + ' km';
+    this.duration = (totalDuration / 60).toFixed(0) + ' min';
   }
 }

@@ -18,6 +18,7 @@
 
   <div>
     <h2>Map Routing App</h2>
+    <div class="search-container"></div>
     <form (ngSubmit)="onSubmit()">
       <label>From:</label>
       <input type="text" [(ngModel)]="fromLocation" name="fromLocation" (input)="onFromLocationInput()" autocomplete="on" />
@@ -25,5 +26,13 @@
       <input type="text" [(ngModel)]="toLocation" name="toLocation" (input)="onToLocationInput()" autocomplete="on" />
       <button type="submit" [disabled]="!fromLocation || !toLocation">Get Route</button>
     </form>
-    <div #mapContainer id="map-container"></div>
   </div>
+
+  <div class="route-info" *ngIf="distance && duration">
+    <p>Distance: {{ distance }}</p>
+    <p>Duration: {{ duration }}</p>
+  </div>
+
+
+    <div #mapContainer id="map-container"></div>
+
