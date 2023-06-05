@@ -1,0 +1,40 @@
+  #map {
+    height: 400px;
+    width: 100%;
+    border: 1px solid rgb(165, 165, 165);
+  }
+
+  .parentFormContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  #formContainer {
+    display: flex;
+    align-items: center;
+  }
+
+  input[type="text"] {
+    margin-right: 10px;
+  }
+
+  button {
+    padding: 5px 10px;
+  }
+
+  .message {
+    margin-top: 10px;
+    font-weight: bold;
+    padding: 5px;
+    text-align: center;
+  }
+
+  .green {
+    color: green;
+  }
+
+  .red {
+    color: red;
+  }
+

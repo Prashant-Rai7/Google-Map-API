@@ -1,0 +1,15 @@
+
+<div class="parentFormContainer">
+  <div id="formContainer">
+    <!-- <input class="form-label rounded border m-4 p-2" type="text" [(ngModel)]="enteredLocation" placeholder="Search Location.."> -->
+    <input class="form-label rounded border m-4 p-2" type="text" placeholder="Search Location..">
+    <button class="btn btn-success" (click)="checkLocation()">Check</button>
+    <div class="message" [ngClass]="{'green': isLocationInZone, 'red': !isLocationInZone}">
+      {{ message }}
+    </div>
+  </div>
+</div>
+
+<div class="container rounded w-100 border" id="map" style="height: 400px;"></div>
+
+
