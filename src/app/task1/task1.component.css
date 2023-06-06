@@ -4,7 +4,12 @@
     width: 100%;
     border: 1px solid rgb(165, 165, 165);
   }
-
+  .main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
   .search-container {
     margin-top: 20px;
     display: flex;

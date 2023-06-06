@@ -4,11 +4,17 @@
     border: 1px solid rgb(165, 165, 165);
     margin-top: 20px;
   }
+  .main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 
+
+  }
   .parentFormContainer {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   }
 
