@@ -16,16 +16,18 @@
   <div id="map"></div> -->
 
 
-  <div>
-    <h2>Map Routing App</h2>
-    <div class="search-container"></div>
-    <form (ngSubmit)="onSubmit()">
-      <label>From:</label>
-      <input type="text" [(ngModel)]="fromLocation" name="fromLocation" (input)="onFromLocationInput()" autocomplete="on" />
-      <label>To:</label>
-      <input type="text" [(ngModel)]="toLocation" name="toLocation" (input)="onToLocationInput()" autocomplete="on" />
-      <button type="submit" [disabled]="!fromLocation || !toLocation">Get Route</button>
-    </form>
+  <div class="main">
+    <h1>Google Map Routing Task</h1>
+  </div>
+
+  <div class="search-container">
+  <form (ngSubmit)="onSubmit()">
+    <label>From:</label>
+    <input type="text" #fromSearchBox id="fromSearchBox"  [(ngModel)]="fromLocation" name="fromLocation" (input)="onFromLocationInput()" autocomplete="on" />
+    <label>To:</label>
+    <input type="text" #toSearchBox id="toSearchBox"   [(ngModel)]="toLocation" name="toLocation" (input)="onToLocationInput()" autocomplete="on" />
+    <button type="submit" [disabled]="!fromLocation || !toLocation">Get Route</button>
+  </form>
   </div>
 
   <div class="route-info" *ngIf="distance && duration">
