@@ -121,6 +121,7 @@ export class Task3Component implements AfterViewInit {
         }
       } else {
         this.toastr.error('Geocode was not successful for the following reason: ' + status, 'Error');
+        // alert("Geocode was not successful for the following reason")
       }
     });
   }
