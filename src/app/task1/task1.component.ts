@@ -106,22 +106,6 @@ export class Task1Component {
 
 
 
-//   selectLocation() {
-//     const geocoder = new google.maps.Geocoder();
-//     const location = this.enteredLocation;
-//     console.log(location)
-
-//     geocoder.geocode({ address: location }, (results: any, status: any) => {
-//       if (status === 'OK') {
-//         const resultLocation = results[0].geometry.location;
-//         this.map.setCenter(resultLocation);
-//         this.addMarker(resultLocation);
-//       } else {
-//         console.log('Geocode was not successful for the following reason: ' + status);
-//       }
-//     });
-//   }
-// }
 
 
 

@@ -1,107 +1,128 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-// import { AuthService } from '../Service/auth.service';
-// import { ToastrService } from 'ngx-toastr';
+import { AfterViewInit, Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
-declare const google: any;
+declare var google: any;
 
 @Component({
   selector: 'app-task3',
   templateUrl: './task3.component.html',
   styleUrls: ['./task3.component.css']
 })
-export class Task3Component implements OnInit, AfterViewInit {
-
-
-  enteredLocation: string = '';
-  isLocationInZone: boolean = false;
-  message: string = '';
-  polygon: any;
+export class Task3Component implements AfterViewInit {
   map: any;
+  drawingManager: any;
+  polygon: any;
+  isInZone: boolean = false;
+  cordsArray: any = [];
+  marker: any;
+  autocomplete: any;
 
-  // constructor(private authService: AuthService, private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService){}
 
-  ngOnInit() {}
+  setLocation(place: any) {
+    if (!place.geometry) {
+      console.error('No geometry found for place:', place);
+      return;
+    }
 
-  ngAfterViewInit() {
-    this.initializeMap();
+    if (place.geometry && place.geometry.location) {
+      this.map.setCenter(place.geometry.location);
+      this.map.setZoom(12);
+      this.marker.setPosition(place.geometry.location);
+      this.marker.setVisible(true);
+    }
   }
 
-  initializeMap() {
-    this.map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 40.7128, lng: -74.0060 }, // Set the center coordinates
-      zoom: 12 // Set the initial zoom level
+  ngAfterViewInit() {
+    this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      center: { lat: 20.5937, lng: 78.9629 },
+      zoom: 5
     });
 
-    const drawingManager = new google.maps.drawing.DrawingManager({
-      drawingMode: google.maps.drawing.OverlayType.POLYGON, // Set the drawing mode to polygon
+    const input = document.getElementById('input') as HTMLInputElement;
+    this.autocomplete = new google.maps.places.Autocomplete(input);
+
+    this.autocomplete.addListener('place_changed', () => {
+      const place: any = this.autocomplete.getPlace();
+
+      if (!place.geometry) {
+        console.error('No geometry found for place:', place);
+        return;
+      }
+
+      // Move map marker to selected location
+      if (place.geometry && place.geometry.location) {
+        this.map.setCenter(place.geometry.location);
+        this.map.setZoom(12); // Increase the zoom level
+        this.marker.setPosition(place.geometry.location);
+        this.marker.setVisible(true);
+      }
+    });
+
+    // Show current location on page load
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const currentLocation = new google.maps.LatLng(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        this.map.setCenter(currentLocation);
+        this.marker.setPosition(currentLocation);
+        this.marker.setVisible(true);
+      });
+    }
+
+    // Add Location Marker or Pin
+    this.marker = new google.maps.Marker({
+      map: this.map,
+      draggable: true,
+      animation: google.maps.Animation.DROP,
+      anchorPoint: new google.maps.Point(0, -29)
+    });
+
+    // to draw the polygon on the map
+    this.drawingManager = new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
       drawingControl: true,
       drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_CENTER,
         drawingModes: [google.maps.drawing.OverlayType.POLYGON]
-      },
-      map: this.map // Set the map object to enable drawing on the map
+      }
     });
 
-    google.maps.event.addListener(drawingManager, 'polygoncomplete', (event: any) => {
-      if (this.polygon) {
-        this.polygon.setMap(null); // Clear previous polygon from the map
+    this.drawingManager.setMap(this.map);
+
+    google.maps.event.addListener(this.drawingManager, 'overlaycomplete', (event: any) => {
+      if (event.type === google.maps.drawing.OverlayType.POLYGON) {
+        if (this.polygon) {
+          this.polygon.setMap(null);
+        }
+        console.log(event);
+
+        this.polygon = event.overlay;
+        console.log(this.polygon);
       }
-      this.polygon = event.overlay;
-      this.logPolygonCoordinates(this.polygon);
     });
-  }
-
-  checkLocationAgainstZone(location: any) {
-    if (this.polygon) {
-      const point = new google.maps.LatLng(location.lat(), location.lng());
-      this.isLocationInZone = google.maps.geometry.poly.containsLocation(point, this.polygon);
-
-      if (this.isLocationInZone) {
-        this.message = 'Yes, your entered location belongs to the drawn zone.';
-      } else {
-        this.message = 'Sorry, your entered location doesn’t belong to the drawn zone.';
-      }
-    } else {
-      this.message = 'Please draw a zone on the map.';
-    }
   }
 
   checkLocation() {
     const geocoder = new google.maps.Geocoder();
-    const location = this.enteredLocation;
+    const input = document.getElementById('input') as HTMLInputElement;
+    console.log('.....checkLocation.......' + input.value);
 
-    geocoder.geocode({ address: location }, (results: any, status: any) => {
+    geocoder.geocode({ address: input.value }, (results: any, status: any) => {
       if (status === 'OK') {
-
-        console.log('entered inside if OK......',status)
-
-        const resultLocation = results[0].geometry.location;
-
-        console.log('resultLocation......',resultLocation)
-
-
-
-        this.map.setCenter(resultLocation);
-        const marker = new google.maps.Marker({
-          position: resultLocation,
-          map: this.map
-        });
-
-        this.checkLocationAgainstZone(resultLocation);
+        const location = results[0].geometry.location;
+        this.isInZone = google.maps.geometry.poly.containsLocation(location, this.polygon);
+        if (this.isInZone) {
+          this.toastr.success('Your entered location belongs to the drawn zone');
+        } else {
+          this.toastr.error('Sorry! Entered location doesnt belong to the drawn zone');
+        }
       } else {
-        console.log('Geocode was not successful for the following reason: ' + status);
+        this.toastr.error('Geocode was not successful for the following reason: ' + status, 'Error');
       }
     });
   }
 
-  logPolygonCoordinates(polygon: any) {
-    if (polygon && polygon.getPath) {
-      const coordinates = polygon.getPath().getArray();
-      console.log('Polygon Coordinates:', coordinates);
-    }
-  }
-
-  // resetTimer() {
-  //   this.authService.resetInactivityTimer();
-  // }
 }
