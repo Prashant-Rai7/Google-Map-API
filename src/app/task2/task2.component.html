@@ -25,7 +25,7 @@
     <label>From:</label>
     <input type="text" #fromSearchBox id="fromSearchBox"  [(ngModel)]="fromLocation" name="fromLocation" (input)="onFromLocationInput()" autocomplete="on" />
     <label>To:</label>
-    <input type="text" #toSearchBox id="toSearchBox"   [(ngModel)]="toLocation" name="toLocation" (input)="onToLocationInput()" autocomplete="on" />
+    <input type="text" #toSearchBox id="toSearchBox" [(ngModel)]="toLocation" name="toLocation" (input)="onToLocationInput()" autocomplete="on" />
     <button type="submit" [disabled]="!fromLocation || !toLocation">Get Route</button>
   </form>
   </div>

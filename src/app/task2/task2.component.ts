@@ -8,7 +8,7 @@ declare var google: any;
   styleUrls: ['./task2.component.css']
 })
 export class Task2Component {
-
+  // obtain references to specific elements in the component's template.
   @ViewChild('mapContainer', { static: false })mapContainer!: ElementRef;
   @ViewChild('fromInput', { static: false }) fromInput!: ElementRef;
   @ViewChild('toInput', { static: false }) toInput!: ElementRef;
@@ -26,6 +26,7 @@ export class Task2Component {
   toSearchBox!: any;
 
   constructor() {
+    //These are objects for handling directions.
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
   }
@@ -35,13 +36,13 @@ export class Task2Component {
       center: { lat: 0, lng: 0 },
       zoom: 10
     };
-
+    // Initialize map
     this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
     this.directionsRenderer.setMap(this.map);
 
 
 
-    // Create autocomplete search box................
+    // Create Autocomplete search box for FROM and TO location................
     const frominput = document.getElementById('fromSearchBox') as HTMLInputElement;
     this.toAutocomplete = new (google as any).maps.places.Autocomplete(frominput);
     this.toAutocomplete.setFields(['geometry']);
@@ -54,28 +55,22 @@ export class Task2Component {
 
 
 
-
-
-
   onSubmit() {
-    console.log(this.fromLocation,"..................")
-    console.log(this.toLocation,"..................")
-
-    //if from and to location is valid and not undefined
+    //if from and to location is valid and not undefined.
     if (this.fromLocation && this.toLocation) {
       this.calculateRoute();
     }
   }
 
-
-  // to set the origin and destination location route path and driving mode
+  //Calculate Route b/w To and From Location using calculateDistanceAndDuration() method.
   calculateRoute() {
+    // to set the origin and destination location route path and driving mode.
     const request = {
       origin: this.fromLocation,
       destination: this.toLocation,
       travelMode: 'DRIVING'
     };
-
+    //set Route if status ok with result
     this.directionsService.route(request, (result: any, status: any) => {
       if (status === 'OK') {
         this.directionsRenderer.setDirections(result);
@@ -84,24 +79,28 @@ export class Task2Component {
     });
   }
 
+  // Place marker for the "From" location (A) by calling placeMarker() fxn
   onFromLocationInput() {
-    // Place marker for the "From" location (A)
     this.fromLocation = this.fromInput.nativeElement.value;
     this.placeMarker(this.fromLocation);
   }
 
+  // Place marker for the "To" location (B) by calling placeMarker() fxn
   onToLocationInput() {
-    // Place marker for the "To" location (B)
     this.toLocation = this.toInput.nativeElement.value;
     this.placeMarker(this.toLocation);
   }
 
+  //It sets the
   placeMarker(location: string) {
     if (location) {
+      // Geocoder class convert addresses into geographic coordinates (latitude and longitude) and vice versa
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ address: location }, (results: any, status: any) => {
         if (status === 'OK') {
+          // retrieves the geographic coordinates first value
           const position = results[0].geometry.location;
+          // It moves the map's view to focus on the specified location i.e, geocoded position.
           this.map.setCenter(position);
         }
       });
@@ -114,11 +113,18 @@ export class Task2Component {
     let totalDuration = 0;
 
     for (let i = 0; i < route.legs.length; i++) {
+      //distance value from i to final point length is added in totalDistance variable
       totalDistance += route.legs[i].distance.value;
+      //duration value from i to final point length is added in totalDuration variable
       totalDuration += route.legs[i].duration.value;
     }
+    console.log(totalDistance+"...................mtr")
+    console.log(totalDuration+"....................sec")
 
     this.distance = (totalDistance / 1000).toFixed(2) + ' km';
     this.duration = (totalDuration / 3600).toFixed(0) + ' Hr';
+
+    console.log(this.distance+"...................km")
+    console.log(this.duration+"....................hr")
   }
 }

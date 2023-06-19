@@ -48,7 +48,7 @@ export class Task1Component {
       });
     }
 
-    // Add Location Marker or Pin.........................
+    // MAke the marker drggable and Animated.........................
     this.marker = new google.maps.Marker({
       map: this.map,
       draggable: true,
@@ -56,30 +56,33 @@ export class Task1Component {
       anchorPoint: new google.maps.Point(0, -29)
     });
 
+    // on click make Bounce Animation or null animation i.e, toggling
     this.marker.addListener('click', () => {
       this.toggleBounce();
     });
 
+    //when marker is dragged, it shows new position
     this.marker.addListener('dragend', () => {
       const position = this.marker.getPosition();
       this.geocodeLatLng(position);
     });
 
 
-    // Handle place selection
+    // Handle place selection from autocomplete.
     this.autocomplete.addListener('place_changed', () => {
-      const place = this.autocomplete.getPlace();
-      this.marker.setVisible(false);
+      const place = this.autocomplete.getPlace();   //it retrieves the selected place from autocomplete searchbox, The place variable stores the result.
+      this.marker.setVisible(false);    //statement is used to hide the marker on the map temporarily. This is done to ensure that the marker is not visible if the selected place does not have a valid geometry.
 
-      // Move map marker to selected location
+      // Move map marker to selected location from autocomplete selected location.
       if (place.geometry && place.geometry.location) {
-        this.map.setCenter(place.geometry.location);
-        this.marker.setPosition(place.geometry.location);
+        this.map.setCenter(place.geometry.location);    //This moves the map view to the selected location
+        this.marker.setPosition(place.geometry.location);   //It updates the position of the marker to the selected place's geometry location
         this.marker.setVisible(true);
       }
     });
   }
 
+  //set Animation on marker.
   toggleBounce() {
     if (this.marker.getAnimation() !== null) {
       this.marker.setAnimation(null);
@@ -90,12 +93,12 @@ export class Task1Component {
 
   //update address or Location
   geocodeLatLng(position: any) {
-    const geocoder = new google.maps.Geocoder();
+    const geocoder = new google.maps.Geocoder();  //converts coordinates into human readable format.
     geocoder.geocode({ location: position }, (results: any, status: any) => {
       if (status === 'OK' && results[0]) {
-        const address = results[0].formatted_address;
+        const address = results[0].formatted_address; //contains the human-readable address associated with the provided coordinates.
         const input = document.getElementById('search-box') as HTMLInputElement;
-        input.value = address;
+        input.value = address;  //here input value from search is updated with the generated address and show in searchbox.
         console.log(address)
       }
     });
